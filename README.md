@@ -2,6 +2,175 @@
 
 This application was generated using JHipster 8.6.0, you can find documentation and help at [https://www.jhipster.tech/documentation-archive/v8.6.0](https://www.jhipster.tech/documentation-archive/v8.6.0).
 
+## mini order Processing System :
+
+1.  Exposes REST APIs to create and retrieve orders
+2.  Stores orders using in-memory data structures
+3.  Processes orders asynchronously using Apache Camel, files, and ActiveMQ
+
+The system demonstrates **REST API handling, in-memory persistence, file-based integration, message queuing, asynchronous processing, JWT-based authentication and Authorization**.
+
+---
+
+## 🚀 Tech Stack
+
+- **Java**: 17
+- **Spring Boot** (via JHipster 8.11.0)
+- **Apache Camel**
+- **ActiveMQ (Classic)**
+- **H2 In-Memory Database**
+- **Maven**
+- **JWT Authentication**
+
+---
+
+## 🏗 High-Level Architecture
+
+Client (REST)  
+ |  
+ | POST /api/orders  
+ v  
+ Spring Boot Application  
+ |  
+ | In-memory storage  
+ |  
+ | (Bonus) Write Order JSON  
+ v  
+ File System (/input/orders)  
+ |  
+ | Apache Camel Route  
+ v  
+ ActiveMQ Queue (ORDER.CREATED.QUEUE)  
+ |  
+ | Apache Camel Consumer  
+ v  
+ Application Logs
+
+---
+
+## 📌 Features Implemented
+
+### Core Features
+
+- Create Order via REST API
+- Persist order in **H2 in-memory database**
+- Fetch orders by `customerId`
+
+### Bonus Features (Asynchronous Processing)
+
+- Write order details to JSON file
+- Apache Camel route to:
+  - Poll order files
+  - Validate order data
+  - Publish valid orders to ActiveMQ queue
+- Apache Camel consumer to:
+  - Consume messages from queue
+  - Log order details asynchronously
+
+---
+
+## 📂 Important Directories
+
+- input/orders/ → Generated order JSON files
+- error/orders/ → Invalid order files (if any)
+- src/main/java/... → Application source code
+
+---
+
+## 🔧 Server & Runtime Requirements
+
+| Requirement | Version                  |
+| ----------- | ------------------------ |
+| Java        | 17                       |
+| Maven       | 3.8+                     |
+| Node.js     | Required for JHipster UI |
+| ActiveMQ    | Classic (5.x)            |
+
+---
+
+## 🧪 Database Configuration
+
+- **Database**: H2 (In-Memory)
+- **Persistence**: Active only during application runtime
+- **No external DB setup required**
+
+---
+
+## 📨 ActiveMQ Configuration
+
+- **Broker**: ActiveMQ Classic
+- **Queue Name**: ORDER.CREATED.QUEUE
+
+- **Message Type**: JSON (TextMessage)
+- **Security**: No `ObjectMessage` used
+
+> Ensure ActiveMQ is running before starting the application.
+
+---
+
+## ▶️ Build & Run Instructions
+
+### 1️⃣ Build the Project (Skip Tests)
+
+```bash
+mvn clean install -DskipTests
+```
+
+### 2️⃣ Run the Application
+
+```bash
+./mvnw  // Linux or mac
+mvnw    // Windows
+```
+
+The application will start on:
+`http://localhost:8080`
+
+## 🔐 Authentication & Authorization
+
+The application uses JWT-based authentication to secure all REST APIs.
+
+### Authentication
+
+    Authentication Type: **JWT**
+
+    All order APIs are accessible only to authenticated users
+
+    To obtain a JWT token, call the authentication API:
+    ```bash
+      curl --location 'http://localhost:8080/api/authenticate' \
+        --header 'Content-Type: application/json' \
+        --data '{
+          "username": "admin",
+          "password": "admin"
+        }'
+    ```
+
+    The response contains an `id_token`.
+    Use this token as a `Bearer Token` in Postman:
+
+    Authorization → `Type: Bearer Token`
+
+    Token: <id_token>
+
+### Authorization
+
+    Two roles are defined:
+    > ADMIN
+    > USER
+
+    Access rules:
+    ADMIN : Can create orders and view all orders
+    USER : Can create orders and view only their own orders
+
+    | Role | UserName | Password |
+    |----------| -------- | -------- |
+    | ADMIN | admin | admin |
+    | USER | user | user |
+
+    > ✔ All APIs are secured with JWT
+    > ✔ Role-based access control is fully implemented
+
 ## Project Structure
 
 Node is required for generation and recommended for development. `package.json` is always generated for a better development experience with prettier, commit hooks, scripts and so on.
@@ -18,7 +187,6 @@ In the project root, JHipster generates configuration files for tools like git, 
 
 - `npmw` - wrapper to use locally installed npm.
   JHipster installs Node and npm locally using the build tool by default. This wrapper makes sure npm is installed locally and uses it avoiding some differences different versions can cause. By using `./npmw` instead of the traditional `npm` you can configure a Node-less environment to develop or test your application.
-- `/src/main/docker` - Docker configurations for the application and services that the application depends on
 
 ## Development
 
@@ -41,194 +209,54 @@ auto-refreshes when files change on your hard drive.
 ./npmw start
 ```
 
-Npm is also used to manage CSS and JavaScript dependencies used in this application. You can upgrade dependencies by
-specifying a newer version in [package.json](package.json). You can also run `./npmw update` and `./npmw install` to manage dependencies.
-Add the `help` flag on any command to see how you can use it. For example, `./npmw help update`.
+## 📡 REST API Endpoints
 
-The `./npmw run` command will list all the scripts available to run for this project.
+### Create Order
 
-### PWA Support
-
-JHipster ships with PWA (Progressive Web App) support, and it's turned off by default. One of the main components of a PWA is a service worker.
-
-The service worker initialization code is commented out by default. To enable it, uncomment the following code in `src/main/webapp/index.html`:
-
-```html
-<script>
-  if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('./service-worker.js').then(function () {
-      console.log('Service Worker Registered');
-    });
-  }
-</script>
+```bash
+  POST /api/orders
 ```
 
-Note: [Workbox](https://developers.google.com/web/tools/workbox/) powers JHipster's service worker. It dynamically generates the `service-worker.js` file.
+Payload
 
-### Managing dependencies
-
-For example, to add [Leaflet][] library as a runtime dependency of your application, you would run following command:
-
-```
-./npmw install --save --save-exact leaflet
-```
-
-To benefit from TypeScript type definitions from [DefinitelyTyped][] repository in development, you would run following command:
-
-```
-./npmw install --save-dev --save-exact @types/leaflet
+```json
+{
+  "customerId": "CUST1001",
+  "product": "Laptop",
+  "amount": 75000
+}
 ```
 
-Then you would import the JS and CSS files specified in library's installation instructions so that [Webpack][] knows about them:
-Note: There are still a few other things remaining to do for Leaflet that we won't detail here.
+### Fetch Orders by Customer
 
-For further instructions on how to develop with JHipster, have a look at [Using JHipster in development][].
-
-## Building for production
-
-### Packaging as jar
-
-To build the final jar and optimize the orderProcessSystem application for production, run:
-
-```
-./mvnw -Pprod clean verify
+```bash
+  GET /api/orders?customerId=CUST1001
 ```
 
-This will concatenate and minify the client CSS and JavaScript files. It will also modify `index.html` so it references these new files.
-To ensure everything worked, run:
+## 🧾 Verified Execution Logs
 
-```
-java -jar target/*.jar
-```
+The following logs confirm the successful end-to-end flow:
 
-Then navigate to [http://localhost:8080](http://localhost:8080) in your browser.
-
-Refer to [Using JHipster in production][] for more details.
-
-### Packaging as war
-
-To package your application as a war in order to deploy it to an application server, run:
-
-```
-./mvnw -Pprod,war clean verify
+```pgsql
+  Order saved successfully in DB
+  Order file written to input/orders/order-1001.json
+  Camel route picked up the file
+  Order published to ActiveMQ queue
+  Order consumed and processed asynchronously
 ```
 
-### JHipster Control Center
+Sample log excerpt:
 
-JHipster Control Center can help you manage and control your application(s). You can start a local control center server (accessible on http://localhost:7419) with:
-
-```
-docker compose -f src/main/docker/jhipster-control-center.yml up
-```
-
-## Testing
-
-### Spring Boot tests
-
-To launch your application's tests, run:
-
-```
-./mvnw verify
+```pgsql
+  Processing file: order-1001.json
+  Valid order | OrderId=1001
+  Order processed | OrderId=1001 | CustomerId=CUST1001 | Amount=75000.0
 ```
 
-### Client tests
+## 📝 Notes
 
-Unit tests are run by [Jest][]. They're located in [src/test/javascript/](src/test/javascript/) and can be run with:
+> No external database configuration required.
 
-```
-./npmw test
-```
+> Application is fully self-contained.
 
-## Others
-
-### Code quality using Sonar
-
-Sonar is used to analyse code quality. You can start a local Sonar server (accessible on http://localhost:9001) with:
-
-```
-docker compose -f src/main/docker/sonar.yml up -d
-```
-
-Note: we have turned off forced authentication redirect for UI in [src/main/docker/sonar.yml](src/main/docker/sonar.yml) for out of the box experience while trying out SonarQube, for real use cases turn it back on.
-
-You can run a Sonar analysis with using the [sonar-scanner](https://docs.sonarqube.org/display/SCAN/Analyzing+with+SonarQube+Scanner) or by using the maven plugin.
-
-Then, run a Sonar analysis:
-
-```
-./mvnw -Pprod clean verify sonar:sonar -Dsonar.login=admin -Dsonar.password=admin
-```
-
-If you need to re-run the Sonar phase, please be sure to specify at least the `initialize` phase since Sonar properties are loaded from the sonar-project.properties file.
-
-```
-./mvnw initialize sonar:sonar -Dsonar.login=admin -Dsonar.password=admin
-```
-
-Additionally, Instead of passing `sonar.password` and `sonar.login` as CLI arguments, these parameters can be configured from [sonar-project.properties](sonar-project.properties) as shown below:
-
-```
-sonar.login=admin
-sonar.password=admin
-```
-
-For more information, refer to the [Code quality page][].
-
-### Using Docker to simplify development (optional)
-
-You can use Docker to improve your JHipster development experience. A number of docker-compose configuration are available in the [src/main/docker](src/main/docker) folder to launch required third party services.
-
-For example, to start a postgresql database in a docker container, run:
-
-```
-docker compose -f src/main/docker/postgresql.yml up -d
-```
-
-To stop it and remove the container, run:
-
-```
-docker compose -f src/main/docker/postgresql.yml down
-```
-
-You can also fully dockerize your application and all the services that it depends on.
-To achieve this, first build a docker image of your app by running:
-
-```
-npm run java:docker
-```
-
-Or build a arm64 docker image when using an arm64 processor os like MacOS with M1 processor family running:
-
-```
-npm run java:docker:arm64
-```
-
-Then run:
-
-```
-docker compose -f src/main/docker/app.yml up -d
-```
-
-When running Docker Desktop on MacOS Big Sur or later, consider enabling experimental `Use the new Virtualization framework` for better processing performance ([disk access performance is worse](https://github.com/docker/roadmap/issues/7)).
-
-For more information refer to [Using Docker and Docker-Compose][], this page also contains information on the docker-compose sub-generator (`jhipster docker-compose`), which is able to generate docker configurations for one or several JHipster applications.
-
-## Continuous Integration (optional)
-
-To configure CI for your project, run the ci-cd sub-generator (`jhipster ci-cd`), this will let you generate configuration files for a number of Continuous Integration systems. Consult the [Setting up Continuous Integration][] page for more information.
-
-[JHipster Homepage and latest documentation]: https://www.jhipster.tech
-[JHipster 8.6.0 archive]: https://www.jhipster.tech/documentation-archive/v8.6.0
-[Using JHipster in development]: https://www.jhipster.tech/documentation-archive/v8.6.0/development/
-[Using Docker and Docker-Compose]: https://www.jhipster.tech/documentation-archive/v8.6.0/docker-compose
-[Using JHipster in production]: https://www.jhipster.tech/documentation-archive/v8.6.0/production/
-[Running tests page]: https://www.jhipster.tech/documentation-archive/v8.6.0/running-tests/
-[Code quality page]: https://www.jhipster.tech/documentation-archive/v8.6.0/code-quality/
-[Setting up Continuous Integration]: https://www.jhipster.tech/documentation-archive/v8.6.0/setting-up-ci/
-[Node.js]: https://nodejs.org/
-[NPM]: https://www.npmjs.com/
-[Webpack]: https://webpack.github.io/
-[BrowserSync]: https://www.browsersync.io/
-[Jest]: https://facebook.github.io/jest/
-[Leaflet]: https://leafletjs.com/
-[DefinitelyTyped]: https://definitelytyped.org/
+> Designed following best practices for security and messaging.
