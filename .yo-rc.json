@@ -1,0 +1,33 @@
+{
+  "generator-jhipster": {
+    "applicationType": "monolith",
+    "authenticationType": "jwt",
+    "baseName": "orderProcessSystem",
+    "buildTool": "maven",
+    "cacheProvider": "no",
+    "clientFramework": "react",
+    "clientTestFrameworks": [],
+    "clientTheme": "darkly",
+    "clientThemeVariant": "dark",
+    "creationTimestamp": 1766673055799,
+    "databaseType": "sql",
+    "devDatabaseType": "h2Memory",
+    "enableHibernateCache": null,
+    "enableTranslation": false,
+    "entities": [],
+    "feignClient": null,
+    "jhipsterVersion": "8.11.0",
+    "jwtSecretKey": "NWM2YjU1ODE2YjkyZmE2MDY3MWQ2OGFkMDY4MDI3MWNjMWFmNzdiY2RiNjMyZDI2MjA1YzdjNWIyMzE2YjU3Njk3NTMzMDM2NzRkNWRjZWQwYzc5YTk3NTlkNTBjNGI5NDE1NmY1ZTNjYjUyMmExMmNmODA5YTVkMDMzN2I1ZTE=",
+    "microfrontend": null,
+    "microfrontends": [],
+    "nativeLanguage": "en",
+    "packageName": "com.mini.orderapp",
+    "prodDatabaseType": "postgresql",
+    "reactive": false,
+    "serverPort": null,
+    "serviceDiscoveryType": null,
+    "syncUserWithIdp": null,
+    "testFrameworks": [],
+    "withAdminUi": true
+  }
+}
