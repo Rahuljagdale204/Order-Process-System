@@ -1,7 +1,10 @@
 package com.mini.orderapp.service;
 
 import com.mini.orderapp.domain.Orders;
+import com.mini.orderapp.domain.User;
 import com.mini.orderapp.repository.OrdersRepository;
+import com.mini.orderapp.repository.UserRepository;
+import com.mini.orderapp.security.SecurityUtils;
 import com.mini.orderapp.service.customService.OrderFileWriter;
 import com.mini.orderapp.service.dto.OrdersDTO;
 import com.mini.orderapp.service.mapper.OrdersMapper;
@@ -29,10 +32,18 @@ public class OrdersService {
 
     private final OrderFileWriter orderFileWriter;
 
-    public OrdersService(OrdersRepository ordersRepository, OrdersMapper ordersMapper, OrderFileWriter orderFileWriter) {
+    private final UserRepository userRepository;
+
+    public OrdersService(
+        OrdersRepository ordersRepository,
+        OrdersMapper ordersMapper,
+        OrderFileWriter orderFileWriter,
+        UserRepository userRepository
+    ) {
         this.ordersRepository = ordersRepository;
         this.ordersMapper = ordersMapper;
         this.orderFileWriter = orderFileWriter;
+        this.userRepository = userRepository;
     }
 
     /**
@@ -44,6 +55,8 @@ public class OrdersService {
     public OrdersDTO save(OrdersDTO ordersDTO) {
         log.debug("Request to save Orders : {}", ordersDTO);
         Orders orders = ordersMapper.toEntity(ordersDTO);
+        User user = userRepository.findOneByLogin(SecurityUtils.getCurrentUserLogin().orElseThrow()).orElseThrow();
+        orders.setUser(user);
         orders = ordersRepository.save(orders);
         ordersDTO = ordersMapper.toDto(orders);
         orderFileWriter.writeOrder(ordersDTO);
@@ -92,7 +105,14 @@ public class OrdersService {
     @Transactional(readOnly = true)
     public Page<OrdersDTO> findAll(Pageable pageable) {
         log.debug("Request to get all Orders");
-        return ordersRepository.findAll(pageable).map(ordersMapper::toDto);
+        if (SecurityUtils.hasCurrentUserThisAuthority("ROLE_ADMIN")) {
+            return ordersRepository.findAll(pageable).map(ordersMapper::toDto);
+        }
+
+        User user = userRepository.findOneByLogin(SecurityUtils.getCurrentUserLogin().orElseThrow()).orElseThrow();
+        if (user == null) return Page.empty();
+
+        return ordersRepository.getOrdersByUser(user, pageable).map(ordersMapper::toDto);
     }
 
     /**
