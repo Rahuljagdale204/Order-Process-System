@@ -15,7 +15,7 @@
     "enableHibernateCache": false,
     "enableSwaggerCodegen": false,
     "enableTranslation": false,
-    "entities": [],
+    "entities": ["Orders"],
     "feignClient": null,
     "jhipsterVersion": "8.6.0",
     "jwtSecretKey": "MTRkZDI1NWE1MDY5NzZjNmRkOGNiMTYwZmM0ZjdmZWI0ZDM4MDMzNzFhOWYxM2VlMjNmMWEyZTAyNWQ1YzE5NTllMTAyMTBlMzI3YmVhNDgwNTM4ZGY3NTIzNDA4YTFlNDI2YTExNzdiN2VkMDAyYzJkZmNmOGQ3ODliMTE1MGI=",
