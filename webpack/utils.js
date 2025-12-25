@@ -20,7 +20,7 @@ function mapTypescriptAliasToWebpackAlias(alias = {}) {
     return webpackAliases;
   }
   Object.entries(tsconfig.compilerOptions.paths)
-    .filter(([_key, value]) => {
+    .filter(([key, value]) => {
       // use Typescript alias in Webpack only if this has value
       return !!value.length;
     })

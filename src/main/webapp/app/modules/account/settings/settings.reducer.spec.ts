@@ -2,7 +2,7 @@ import { configureStore } from '@reduxjs/toolkit';
 import axios from 'axios';
 import sinon from 'sinon';
 
-import account, { reset, updateAccount } from './settings.reducer';
+import account, { updateAccount, reset } from './settings.reducer';
 
 describe('Settings reducer tests', () => {
   describe('Common tests', () => {

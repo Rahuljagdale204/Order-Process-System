@@ -1,11 +1,11 @@
-import React, { useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
-import { Button, Col, FormText, Row } from 'reactstrap';
+import { Button, Row, Col, FormText } from 'reactstrap';
 import { ValidatedField, ValidatedForm, isEmail } from 'react-jhipster';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
+import { getUser, getRoles, updateUser, createUser, reset } from './user-management.reducer';
 import { useAppDispatch, useAppSelector } from 'app/config/store';
-import { createUser, getRoles, getUser, reset, updateUser } from './user-management.reducer';
 
 export const UserManagementUpdate = () => {
   const dispatch = useAppDispatch();

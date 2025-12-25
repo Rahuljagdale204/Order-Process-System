@@ -1,7 +1,6 @@
 package com.mini.orderapp.security.jwt;
 
-import static com.mini.orderapp.security.AuthoritiesConstants.ADMIN;
-import static com.mini.orderapp.security.SecurityUtils.AUTHORITIES_CLAIM;
+import static com.mini.orderapp.security.SecurityUtils.AUTHORITIES_KEY;
 import static com.mini.orderapp.security.SecurityUtils.JWT_ALGORITHM;
 
 import com.nimbusds.jose.jwk.source.ImmutableSecret;
@@ -49,7 +48,7 @@ public class JwtAuthenticationTestUtils {
             .issuedAt(now)
             .expiresAt(now.plusSeconds(60))
             .subject(user)
-            .claims(customClaim -> customClaim.put(AUTHORITIES_CLAIM, Collections.singletonList(ADMIN)))
+            .claims(customClaim -> customClaim.put(AUTHORITIES_KEY, Collections.singletonList("ROLE_ADMIN")))
             .build();
 
         JwsHeader jwsHeader = JwsHeader.with(JWT_ALGORITHM).build();

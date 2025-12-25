@@ -1,13 +1,13 @@
 import React, { useEffect } from 'react';
 import { Link, useParams } from 'react-router-dom';
-import { Badge, Button, Row } from 'reactstrap';
+import { Button, Row, Badge } from 'reactstrap';
 import { TextFormat } from 'react-jhipster';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import { APP_DATE_FORMAT } from 'app/config/constants';
 
-import { useAppDispatch, useAppSelector } from 'app/config/store';
 import { getUser } from './user-management.reducer';
+import { useAppDispatch, useAppSelector } from 'app/config/store';
 
 export const UserManagementDetail = () => {
   const dispatch = useAppDispatch();

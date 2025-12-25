@@ -1,2 +1,2 @@
-org.springframework.test.context.ContextCustomizerFactory = \
-    com.mini.orderapp.config.SqlTestContainersSpringContextCustomizerFactory
+org.springframework.test.context.ContextCustomizerFactory = com.mini.orderapp.\
+    config.SqlTestContainersSpringContextCustomizerFactory

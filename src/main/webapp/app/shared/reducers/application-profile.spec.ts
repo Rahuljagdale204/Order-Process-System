@@ -1,5 +1,6 @@
 import axios from 'axios';
 import sinon from 'sinon';
+import { configureStore } from '@reduxjs/toolkit';
 
 import profile, { getProfile } from './application-profile';
 
@@ -47,11 +48,16 @@ describe('Profile reducer tests', () => {
   });
 
   describe('Actions', () => {
+    let store;
+
     const resolvedObject = { value: 'whatever' };
     const getState = jest.fn();
     const dispatch = jest.fn();
     const extra = {};
     beforeEach(() => {
+      store = configureStore({
+        reducer: (state = [], action) => [...state, action],
+      });
       axios.get = sinon.stub().returns(Promise.resolve(resolvedObject));
     });
 

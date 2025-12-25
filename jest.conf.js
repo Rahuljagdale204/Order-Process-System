@@ -1,7 +1,7 @@
 const tsconfig = require('./tsconfig.test.json');
 
 module.exports = {
-  testEnvironment: 'jest-fixed-jsdom',
+  testEnvironment: 'jsdom',
   transform: {
     '^.+\\.tsx?$': [
       'ts-jest',
@@ -43,9 +43,12 @@ function mapTypescriptAliasToJestAlias(alias = {}) {
     return jestAliases;
   }
   Object.entries(tsconfig.compilerOptions.paths)
-    .filter(([_key, value]) => {
+    .filter(([key, value]) => {
       // use Typescript alias in Jest only if this has value
-      return !!value.length;
+      if (value.length) {
+        return true;
+      }
+      return false;
     })
     .map(([key, value]) => {
       // if Typescript alias ends with /* then in Jest:

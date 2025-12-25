@@ -1,15 +1,15 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { Badge, Button, Table } from 'reactstrap';
-import { JhiItemCount, JhiPagination, TextFormat, getPaginationState } from 'react-jhipster';
+import { Button, Table, Badge } from 'reactstrap';
+import { TextFormat, JhiPagination, JhiItemCount, getPaginationState } from 'react-jhipster';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSort, faSortDown, faSortUp } from '@fortawesome/free-solid-svg-icons';
+import { faSort, faSortUp, faSortDown } from '@fortawesome/free-solid-svg-icons';
 
 import { APP_DATE_FORMAT } from 'app/config/constants';
 import { ASC, DESC, ITEMS_PER_PAGE, SORT } from 'app/shared/util/pagination.constants';
 import { overridePaginationStateWithQueryParams } from 'app/shared/util/entity-utils';
-import { useAppDispatch, useAppSelector } from 'app/config/store';
 import { getUsersAsAdmin, updateUser } from './user-management.reducer';
+import { useAppDispatch, useAppSelector } from 'app/config/store';
 
 export const UserManagement = () => {
   const dispatch = useAppDispatch();
@@ -89,8 +89,9 @@ export const UserManagement = () => {
     const order = pagination.order;
     if (sortFieldName !== fieldName) {
       return faSort;
+    } else {
+      return order === ASC ? faSortUp : faSortDown;
     }
-    return order === ASC ? faSortUp : faSortDown;
   };
 
   return (

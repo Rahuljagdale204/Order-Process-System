@@ -2,11 +2,12 @@
 name: orderprocesssystem
 services:
   postgresql:
-    image: postgres:17.4
+    image: postgres:16.3
     # volumes:
     #   - ~/volumes/jhipster/orderProcessSystem/postgresql/:/var/lib/postgresql/data/
     environment:
       - POSTGRES_USER=orderProcessSystem
+      - POSTGRES_PASSWORD=
       - POSTGRES_HOST_AUTH_METHOD=trust
     healthcheck:
       test: ['CMD-SHELL', 'pg_isready -U $${POSTGRES_USER}']

@@ -3,6 +3,7 @@ package com.mini.orderapp.web.rest;
 import com.mini.orderapp.service.UserService;
 import com.mini.orderapp.service.dto.UserDTO;
 import java.util.*;
+import java.util.Collections;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -23,7 +24,7 @@ public class PublicUserResource {
         Arrays.asList("id", "login", "firstName", "lastName", "email", "activated", "langKey")
     );
 
-    private static final Logger LOG = LoggerFactory.getLogger(PublicUserResource.class);
+    private static final Logger log = LoggerFactory.getLogger(PublicUserResource.class);
 
     private final UserService userService;
 
@@ -39,7 +40,7 @@ public class PublicUserResource {
      */
     @GetMapping("/users")
     public ResponseEntity<List<UserDTO>> getAllPublicUsers(@org.springdoc.core.annotations.ParameterObject Pageable pageable) {
-        LOG.debug("REST request to get all public User names");
+        log.debug("REST request to get all public User names");
         if (!onlyContainsAllowedProperties(pageable)) {
             return ResponseEntity.badRequest().build();
         }

@@ -4,15 +4,15 @@ import { isAxiosError } from 'axios';
 import { FieldErrorVM, isProblemWithMessage } from 'app/shared/jhipster/problem-details';
 import { getMessageFromHeaders } from 'app/shared/jhipster/headers';
 
-type ToastMessage = {
+type TostMessage = {
   message?: string;
 };
 
-const addErrorAlert = (message: ToastMessage) => {
+const addErrorAlert = (message: TostMessage) => {
   toast.error(message.message);
 };
 
-const getFieldErrorsToasts = (fieldErrors: FieldErrorVM[]): ToastMessage[] =>
+const getFieldErrorsTosts = (fieldErrors: FieldErrorVM[]): TostMessage[] =>
   fieldErrors.map(fieldError => {
     if (['Min', 'Max', 'DecimalMin', 'DecimalMax'].includes(fieldError.message)) {
       fieldError.message = 'Size';
@@ -23,7 +23,6 @@ const getFieldErrorsToasts = (fieldErrors: FieldErrorVM[]): ToastMessage[] =>
     return { message: `Error on field "${fieldName}"` };
   });
 
-// eslint-disable-next-line complexity
 export default () => next => action => {
   const { error, payload } = action;
 
@@ -40,7 +39,7 @@ export default () => next => action => {
 
   if (isRejectedAction(action) && isAxiosError(error)) {
     if (error.response) {
-      const { response } = error;
+      const response = error.response;
       if (response.status === 401) {
         // Ignore, page will be redirected to login.
       } else if (error.config?.url?.endsWith('api/account') || error.config?.url?.endsWith('api/authenticate')) {
@@ -55,10 +54,10 @@ export default () => next => action => {
           message: 'Not found',
         });
       } else {
-        const { data } = response;
+        const data = response.data;
         const problem = isProblemWithMessage(data) ? data : null;
         if (problem?.fieldErrors) {
-          getFieldErrorsToasts(problem.fieldErrors).forEach(message => addErrorAlert(message));
+          getFieldErrorsTosts(problem.fieldErrors).forEach(message => addErrorAlert(message));
         } else {
           const { error: toastError } = getMessageFromHeaders((response.headers as any) ?? {});
           if (toastError) {

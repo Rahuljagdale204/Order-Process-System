@@ -1,5 +1,5 @@
 import React from 'react';
-import { MemoryRouter, Route } from 'react-router';
+import { MemoryRouter, Route } from 'react-router-dom';
 import { render } from '@testing-library/react';
 
 import ErrorBoundaryRoutes from './error-boundary-routes';

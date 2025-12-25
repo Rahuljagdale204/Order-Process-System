@@ -1,14 +1,12 @@
 package com.mini.orderapp.web.rest;
 
-import static com.mini.orderapp.security.SecurityUtils.AUTHORITIES_CLAIM;
+import static com.mini.orderapp.security.SecurityUtils.AUTHORITIES_KEY;
 import static com.mini.orderapp.security.SecurityUtils.JWT_ALGORITHM;
-import static com.mini.orderapp.security.SecurityUtils.USER_ID_CLAIM;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.mini.orderapp.security.DomainUserDetailsService.UserWithId;
 import com.mini.orderapp.web.rest.vm.LoginVM;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
-import java.security.Principal;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.stream.Collectors;
@@ -36,7 +34,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api")
 public class AuthenticateController {
 
-    private static final Logger LOG = LoggerFactory.getLogger(AuthenticateController.class);
+    private static final Logger log = LoggerFactory.getLogger(AuthenticateController.class);
 
     private final JwtEncoder jwtEncoder;
 
@@ -69,15 +67,15 @@ public class AuthenticateController {
     }
 
     /**
-     * {@code GET /authenticate} : check if the user is authenticated.
+     * {@code GET /authenticate} : check if the user is authenticated, and return its login.
      *
-     * @return the {@link ResponseEntity} with status {@code 204 (No Content)},
-     * or with status {@code 401 (Unauthorized)} if not authenticated.
+     * @param request the HTTP request.
+     * @return the login if the user is authenticated.
      */
     @GetMapping("/authenticate")
-    public ResponseEntity<Void> isAuthenticated(Principal principal) {
-        LOG.debug("REST request to check if the current user is authenticated");
-        return ResponseEntity.status(principal == null ? HttpStatus.UNAUTHORIZED : HttpStatus.NO_CONTENT).build();
+    public String isAuthenticated(HttpServletRequest request) {
+        log.debug("REST request to check if the current user is authenticated");
+        return request.getRemoteUser();
     }
 
     public String createToken(Authentication authentication, boolean rememberMe) {
@@ -92,17 +90,15 @@ public class AuthenticateController {
         }
 
         // @formatter:off
-        JwtClaimsSet.Builder builder = JwtClaimsSet.builder()
+        JwtClaimsSet claims = JwtClaimsSet.builder()
             .issuedAt(now)
             .expiresAt(validity)
             .subject(authentication.getName())
-            .claim(AUTHORITIES_CLAIM, authorities);
-        if (authentication.getPrincipal() instanceof UserWithId user) {
-            builder.claim(USER_ID_CLAIM, user.getId());
-        }
+            .claim(AUTHORITIES_KEY, authorities)
+            .build();
 
         JwsHeader jwsHeader = JwsHeader.with(JWT_ALGORITHM).build();
-        return this.jwtEncoder.encode(JwtEncoderParameters.from(jwsHeader, builder.build())).getTokenValue();
+        return this.jwtEncoder.encode(JwtEncoderParameters.from(jwsHeader, claims)).getTokenValue();
     }
 
     /**

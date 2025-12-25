@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { ValidatedField, ValidatedForm, isEmail } from 'react-jhipster';
-import { Alert, Button, Col, Row } from 'reactstrap';
+import { Row, Col, Alert, Button } from 'reactstrap';
 import { toast } from 'react-toastify';
 import { Link } from 'react-router-dom';
 

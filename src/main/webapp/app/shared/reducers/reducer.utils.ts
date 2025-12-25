@@ -1,11 +1,11 @@
 import {
-  ActionReducerMapBuilder,
+  UnknownAction,
   AsyncThunk,
+  ActionReducerMapBuilder,
+  createSlice,
   SerializedError,
   SliceCaseReducers,
-  UnknownAction,
   ValidateSliceCaseReducers,
-  createSlice,
 } from '@reduxjs/toolkit';
 import { AxiosError, isAxiosError } from 'axios';
 
@@ -53,15 +53,16 @@ export const serializeAxiosError = (value: any): AxiosError | SerializedError =>
   if (typeof value === 'object' && value !== null) {
     if (isAxiosError(value)) {
       return value;
-    }
-    const simpleError: SerializedError = {};
-    for (const property of commonErrorProperties) {
-      if (typeof value[property] === 'string') {
-        simpleError[property] = value[property];
+    } else {
+      const simpleError: SerializedError = {};
+      for (const property of commonErrorProperties) {
+        if (typeof value[property] === 'string') {
+          simpleError[property] = value[property];
+        }
       }
-    }
 
-    return simpleError;
+      return simpleError;
+    }
   }
   return { message: String(value) };
 };
@@ -114,7 +115,7 @@ export const createEntitySlice = <T, Reducers extends SliceCaseReducers<EntitySt
        * while calling `createEntitySlice`
        * */
       if (!skipRejectionHandling) {
-        builder.addMatcher(isRejectedAction, state => {
+        builder.addMatcher(isRejectedAction, (state, action) => {
           state.loading = false;
           state.updating = false;
           state.updateSuccess = false;

@@ -1,5 +1,5 @@
 const getErrorMessage = errorData => {
-  let { message } = errorData;
+  let message = errorData.message;
   if (errorData.fieldErrors) {
     errorData.fieldErrors.forEach(fErr => {
       message += `\nfield: ${fErr.field},  Object: ${fErr.objectName}, message: ${fErr.message}\n`;

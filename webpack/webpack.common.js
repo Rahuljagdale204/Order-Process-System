@@ -8,8 +8,8 @@ const ESLintPlugin = require('eslint-webpack-plugin');
 const utils = require('./utils.js');
 const environment = require('./environment');
 
-const getTsLoaderRule = () => {
-  return [
+const getTsLoaderRule = env => {
+  const rules = [
     {
       loader: 'thread-loader',
       options: {
@@ -27,6 +27,7 @@ const getTsLoaderRule = () => {
       },
     },
   ];
+  return rules;
 };
 
 module.exports = async options => {
@@ -91,8 +92,11 @@ module.exports = async options => {
           SERVER_API_URL: JSON.stringify(environment.SERVER_API_URL),
         }),
         new ESLintPlugin({
-          configType: 'flat',
-          extensions: ['ts', 'tsx'],
+          baseConfig: {
+            parserOptions: {
+              project: ['../tsconfig.json'],
+            },
+          },
         }),
         new ForkTsCheckerWebpackPlugin(),
         new CopyWebpackPlugin({

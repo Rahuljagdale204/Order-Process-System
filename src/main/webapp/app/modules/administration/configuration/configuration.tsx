@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from 'react';
-import { Badge, Col, Input, Row, Table } from 'reactstrap';
+import React, { useState, useEffect } from 'react';
+import { Table, Input, Row, Col, Badge } from 'reactstrap';
 
-import { useAppDispatch, useAppSelector } from 'app/config/store';
 import { getConfigurations, getEnv } from '../administration.reducer';
+import { useAppDispatch, useAppSelector } from 'app/config/store';
 
 export const ConfigurationPage = () => {
   const [filter, setFilter] = useState('');
@@ -56,13 +56,13 @@ export const ConfigurationPage = () => {
                 .filter(propsFilterFn)
                 .map((property: any, propIndex) => (
                   <tr key={propIndex}>
-                    <td>{property.prefix}</td>
+                    <td>{property['prefix']}</td>
                     <td>
-                      {Object.keys(property.properties).map((propKey, index) => (
+                      {Object.keys(property['properties']).map((propKey, index) => (
                         <Row key={index}>
                           <Col md="4">{propKey}</Col>
                           <Col md="8">
-                            <Badge className="float-end bg-secondary break">{JSON.stringify(property.properties[propKey])}</Badge>
+                            <Badge className="float-end bg-secondary break">{JSON.stringify(property['properties'][propKey])}</Badge>
                           </Col>
                         </Row>
                       ))}

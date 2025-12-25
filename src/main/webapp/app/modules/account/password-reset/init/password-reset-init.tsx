@@ -1,10 +1,10 @@
 import React, { useEffect } from 'react';
 import { ValidatedField, ValidatedForm, isEmail } from 'react-jhipster';
-import { Alert, Button, Col, Row } from 'reactstrap';
+import { Button, Alert, Col, Row } from 'reactstrap';
 import { toast } from 'react-toastify';
 
-import { useAppDispatch, useAppSelector } from 'app/config/store';
 import { handlePasswordResetInit, reset } from '../password-reset.reducer';
+import { useAppDispatch, useAppSelector } from 'app/config/store';
 
 export const PasswordResetInit = () => {
   const dispatch = useAppDispatch();

@@ -5,7 +5,7 @@ import static java.net.URLDecoder.decode;
 import jakarta.servlet.*;
 import java.io.File;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Path;
+import java.nio.file.Paths;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.web.server.*;
@@ -29,7 +29,7 @@ import tech.jhipster.config.h2.H2ConfigurationHelper;
 @Configuration
 public class WebConfigurer implements ServletContextInitializer, WebServerFactoryCustomizer<WebServerFactory> {
 
-    private static final Logger LOG = LoggerFactory.getLogger(WebConfigurer.class);
+    private static final Logger log = LoggerFactory.getLogger(WebConfigurer.class);
 
     private final Environment env;
 
@@ -43,13 +43,13 @@ public class WebConfigurer implements ServletContextInitializer, WebServerFactor
     @Override
     public void onStartup(ServletContext servletContext) {
         if (env.getActiveProfiles().length != 0) {
-            LOG.info("Web application configuration, using profiles: {}", (Object[]) env.getActiveProfiles());
+            log.info("Web application configuration, using profiles: {}", (Object[]) env.getActiveProfiles());
         }
 
-        if (h2ConsoleIsEnabled(env)) {
+        if (env.acceptsProfiles(Profiles.of(JHipsterConstants.SPRING_PROFILE_DEVELOPMENT))) {
             initH2Console(servletContext);
         }
-        LOG.info("Web application fully configured");
+        log.info("Web application fully configured");
     }
 
     /**
@@ -65,7 +65,7 @@ public class WebConfigurer implements ServletContextInitializer, WebServerFactor
         if (server instanceof ConfigurableServletWebServerFactory servletWebServer) {
             File root;
             String prefixPath = resolvePathPrefix();
-            root = Path.of(prefixPath + "target/classes/static/").toFile();
+            root = new File(prefixPath + "target/classes/static/");
             if (root.exists() && root.isDirectory()) {
                 servletWebServer.setDocumentRoot(root);
             }
@@ -77,7 +77,7 @@ public class WebConfigurer implements ServletContextInitializer, WebServerFactor
      */
     private String resolvePathPrefix() {
         String fullExecutablePath = decode(this.getClass().getResource("").getPath(), StandardCharsets.UTF_8);
-        String rootPath = Path.of(".").toUri().normalize().getPath();
+        String rootPath = Paths.get(".").toUri().normalize().getPath();
         String extractedPath = fullExecutablePath.replace(rootPath, "");
         int extractionEndIndex = extractedPath.indexOf("target/");
         if (extractionEndIndex <= 0) {
@@ -91,7 +91,7 @@ public class WebConfigurer implements ServletContextInitializer, WebServerFactor
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         CorsConfiguration config = jHipsterProperties.getCors();
         if (!CollectionUtils.isEmpty(config.getAllowedOrigins()) || !CollectionUtils.isEmpty(config.getAllowedOriginPatterns())) {
-            LOG.debug("Registering CORS filter");
+            log.debug("Registering CORS filter");
             source.registerCorsConfiguration("/api/**", config);
             source.registerCorsConfiguration("/management/**", config);
             source.registerCorsConfiguration("/v3/api-docs", config);
@@ -100,18 +100,11 @@ public class WebConfigurer implements ServletContextInitializer, WebServerFactor
         return new CorsFilter(source);
     }
 
-    private boolean h2ConsoleIsEnabled(Environment env) {
-        return (
-            env.acceptsProfiles(Profiles.of(JHipsterConstants.SPRING_PROFILE_DEVELOPMENT)) &&
-            "true".equals(env.getProperty("spring.h2.console.enabled"))
-        );
-    }
-
     /**
      * Initializes H2 console.
      */
     private void initH2Console(ServletContext servletContext) {
-        LOG.info("Initialize H2 console");
+        log.debug("Initialize H2 console");
         H2ConfigurationHelper.initH2Console(servletContext);
     }
 }

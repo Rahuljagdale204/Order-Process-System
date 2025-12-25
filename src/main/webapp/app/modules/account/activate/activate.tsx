@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
-import { Alert, Col, Row } from 'reactstrap';
+import { Row, Col, Alert } from 'reactstrap';
 
 import { useAppDispatch, useAppSelector } from 'app/config/store';
 import { activateAction, reset } from './activate.reducer';

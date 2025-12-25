@@ -18,7 +18,7 @@ class SecurityMetersServiceTests {
     private SecurityMetersService securityMetersService;
 
     @BeforeEach
-    void setup() {
+    public void setup() {
         meterRegistry = new SimpleMeterRegistry();
 
         securityMetersService = new SecurityMetersService(meterRegistry);

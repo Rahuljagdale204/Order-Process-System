@@ -2,11 +2,11 @@ import './header.scss';
 
 import React, { useState } from 'react';
 
-import { Collapse, Nav, Navbar, NavbarToggler } from 'reactstrap';
+import { Navbar, Nav, NavbarToggler, Collapse } from 'reactstrap';
 import LoadingBar from 'react-redux-loading-bar';
 
-import { AccountMenu, AdminMenu, EntitiesMenu } from '../menus';
-import { Brand, Home } from './header-components';
+import { Home, Brand } from './header-components';
+import { AdminMenu, EntitiesMenu, AccountMenu } from '../menus';
 
 export interface IHeaderProps {
   isAuthenticated: boolean;
@@ -34,7 +34,7 @@ const Header = (props: IHeaderProps) => {
     <div id="app-header">
       {renderDevRibbon()}
       <LoadingBar className="loading-bar" />
-      <Navbar data-cy="navbar" dark expand="md" fixed="top" className="bg-dark">
+      <Navbar data-cy="navbar" dark expand="md" fixed="top" className="jh-navbar">
         <NavbarToggler aria-label="Menu" onClick={toggleMenu} />
         <Brand />
         <Collapse isOpen={menuOpen} navbar>

@@ -40,6 +40,9 @@ class UserResourceIT {
 
     private static final Long DEFAULT_ID = 1L;
 
+    private static final String DEFAULT_PASSWORD = "passjohndoe";
+    private static final String UPDATED_PASSWORD = "passjhipster";
+
     private static final String DEFAULT_EMAIL = "johndoe@localhost";
     private static final String UPDATED_EMAIL = "jhipster@localhost";
 
@@ -78,7 +81,7 @@ class UserResourceIT {
     private Long numberOfUsers;
 
     @BeforeEach
-    void countUsers() {
+    public void countUsers() {
         numberOfUsers = userRepository.count();
     }
 
@@ -88,12 +91,12 @@ class UserResourceIT {
      * This is a static method, as tests for other entities might also need it,
      * if they test an entity which has a required relationship to the User entity.
      */
-    public static User createEntity() {
+    public static User createEntity(EntityManager em) {
         User persistUser = new User();
-        persistUser.setLogin(DEFAULT_LOGIN + RandomStringUtils.insecure().nextAlphabetic(5));
-        persistUser.setPassword(RandomStringUtils.insecure().nextAlphanumeric(60));
+        persistUser.setLogin(DEFAULT_LOGIN + RandomStringUtils.randomAlphabetic(5));
+        persistUser.setPassword(RandomStringUtils.randomAlphanumeric(60));
         persistUser.setActivated(true);
-        persistUser.setEmail(RandomStringUtils.insecure().nextAlphabetic(5) + DEFAULT_EMAIL);
+        persistUser.setEmail(RandomStringUtils.randomAlphabetic(5) + DEFAULT_EMAIL);
         persistUser.setFirstName(DEFAULT_FIRSTNAME);
         persistUser.setLastName(DEFAULT_LASTNAME);
         persistUser.setImageUrl(DEFAULT_IMAGEURL);
@@ -104,20 +107,20 @@ class UserResourceIT {
     /**
      * Setups the database with one user.
      */
-    public static User initTestUser() {
-        User persistUser = createEntity();
+    public static User initTestUser(EntityManager em) {
+        User persistUser = createEntity(em);
         persistUser.setLogin(DEFAULT_LOGIN);
         persistUser.setEmail(DEFAULT_EMAIL);
         return persistUser;
     }
 
     @BeforeEach
-    void initTest() {
-        user = initTestUser();
+    public void initTest() {
+        user = initTestUser(em);
     }
 
     @AfterEach
-    void cleanupAndCheck() {
+    public void cleanupAndCheck() {
         userService.deleteUser(DEFAULT_LOGIN);
         userService.deleteUser(UPDATED_LOGIN);
         userService.deleteUser(user.getLogin());
@@ -372,7 +375,7 @@ class UserResourceIT {
 
         User anotherUser = new User();
         anotherUser.setLogin("jhipster");
-        anotherUser.setPassword(RandomStringUtils.insecure().nextAlphanumeric(60));
+        anotherUser.setPassword(RandomStringUtils.randomAlphanumeric(60));
         anotherUser.setActivated(true);
         anotherUser.setEmail("jhipster@localhost");
         anotherUser.setFirstName("java");
@@ -412,7 +415,7 @@ class UserResourceIT {
 
         User anotherUser = new User();
         anotherUser.setLogin("jhipster");
-        anotherUser.setPassword(RandomStringUtils.insecure().nextAlphanumeric(60));
+        anotherUser.setPassword(RandomStringUtils.randomAlphanumeric(60));
         anotherUser.setActivated(true);
         anotherUser.setEmail("jhipster@localhost");
         anotherUser.setFirstName("java");

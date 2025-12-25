@@ -16,9 +16,9 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.auditing.AuditingHandler;
 import org.springframework.data.auditing.DateTimeProvider;
-import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.transaction.annotation.Transactional;
 import tech.jhipster.security.RandomUtil;
 
@@ -50,7 +50,7 @@ class UserServiceIT {
     @Autowired
     private AuditingHandler auditingHandler;
 
-    @MockitoBean
+    @MockBean
     private DateTimeProvider dateTimeProvider;
 
     private User user;
@@ -58,15 +58,15 @@ class UserServiceIT {
     private Long numberOfUsers;
 
     @BeforeEach
-    void countUsers() {
+    public void countUsers() {
         numberOfUsers = userRepository.count();
     }
 
     @BeforeEach
-    void init() {
+    public void init() {
         user = new User();
         user.setLogin(DEFAULT_LOGIN);
-        user.setPassword(RandomStringUtils.insecure().nextAlphanumeric(60));
+        user.setPassword(RandomStringUtils.randomAlphanumeric(60));
         user.setActivated(true);
         user.setEmail(DEFAULT_EMAIL);
         user.setFirstName(DEFAULT_FIRSTNAME);
@@ -79,7 +79,7 @@ class UserServiceIT {
     }
 
     @AfterEach
-    void cleanupAndCheck() {
+    public void cleanupAndCheck() {
         userService.deleteUser(DEFAULT_LOGIN);
         assertThat(userRepository.count()).isEqualTo(numberOfUsers);
         numberOfUsers = null;
@@ -165,7 +165,7 @@ class UserServiceIT {
         Instant now = Instant.now();
         when(dateTimeProvider.getNow()).thenReturn(Optional.of(now.minus(4, ChronoUnit.DAYS)));
         user.setActivated(false);
-        user.setActivationKey(RandomStringUtils.insecure().next(20));
+        user.setActivationKey(RandomStringUtils.random(20));
         User dbUser = userRepository.saveAndFlush(user);
         dbUser.setCreatedDate(now.minus(4, ChronoUnit.DAYS));
         userRepository.saveAndFlush(user);

@@ -4,16 +4,16 @@ import { Storage } from 'react-jhipster';
 import { configureStore, createReducer } from '@reduxjs/toolkit';
 
 import authentication, {
-  authError,
-  authenticate,
-  clearAuth,
-  clearAuthToken,
-  clearAuthentication,
   getAccount,
-  initialState,
+  authenticate,
   login,
+  clearAuthentication,
   logout,
   logoutSession,
+  clearAuthToken,
+  authError,
+  clearAuth,
+  initialState,
 } from 'app/shared/reducers/authentication';
 
 describe('Authentication reducer tests', () => {

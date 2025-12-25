@@ -2,7 +2,7 @@ import axios from 'axios';
 import sinon from 'sinon';
 import { configureStore } from '@reduxjs/toolkit';
 
-import password, { reset, savePassword } from './password.reducer';
+import password, { savePassword, reset } from './password.reducer';
 
 describe('Password reducer tests', () => {
   describe('Common tests', () => {

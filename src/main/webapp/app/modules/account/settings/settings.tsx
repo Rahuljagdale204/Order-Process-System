@@ -5,7 +5,7 @@ import { toast } from 'react-toastify';
 
 import { useAppDispatch, useAppSelector } from 'app/config/store';
 import { getSession } from 'app/shared/reducers/authentication';
-import { reset, saveAccountSettings } from './settings.reducer';
+import { saveAccountSettings, reset } from './settings.reducer';
 
 export const SettingsPage = () => {
   const dispatch = useAppDispatch();

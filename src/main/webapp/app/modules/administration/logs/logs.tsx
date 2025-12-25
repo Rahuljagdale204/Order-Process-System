@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
+import { getLoggers, changeLogLevel } from '../administration.reducer';
 import { useAppDispatch, useAppSelector } from 'app/config/store';
-import { changeLogLevel, getLoggers } from '../administration.reducer';
 
 export const LogsPage = () => {
   const [filter, setFilter] = useState('');

@@ -13,18 +13,17 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.autoconfigure.h2.H2ConsoleAutoConfiguration;
 import org.springframework.boot.autoconfigure.liquibase.LiquibaseProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.core.env.Environment;
 import tech.jhipster.config.DefaultProfileUtil;
 import tech.jhipster.config.JHipsterConstants;
 
-@SpringBootApplication(exclude = { H2ConsoleAutoConfiguration.class })
+@SpringBootApplication
 @EnableConfigurationProperties({ LiquibaseProperties.class, ApplicationProperties.class })
 public class OrderProcessSystemApp {
 
-    private static final Logger LOG = LoggerFactory.getLogger(OrderProcessSystemApp.class);
+    private static final Logger log = LoggerFactory.getLogger(OrderProcessSystemApp.class);
 
     private final Environment env;
 
@@ -46,7 +45,7 @@ public class OrderProcessSystemApp {
             activeProfiles.contains(JHipsterConstants.SPRING_PROFILE_DEVELOPMENT) &&
             activeProfiles.contains(JHipsterConstants.SPRING_PROFILE_PRODUCTION)
         ) {
-            LOG.error(
+            log.error(
                 "You have misconfigured your application! It should not run " + "with both the 'dev' and 'prod' profiles at the same time."
             );
         }
@@ -54,7 +53,7 @@ public class OrderProcessSystemApp {
             activeProfiles.contains(JHipsterConstants.SPRING_PROFILE_DEVELOPMENT) &&
             activeProfiles.contains(JHipsterConstants.SPRING_PROFILE_CLOUD)
         ) {
-            LOG.error(
+            log.error(
                 "You have misconfigured your application! It should not " + "run with both the 'dev' and 'cloud' profiles at the same time."
             );
         }
@@ -83,9 +82,9 @@ public class OrderProcessSystemApp {
         try {
             hostAddress = InetAddress.getLocalHost().getHostAddress();
         } catch (UnknownHostException e) {
-            LOG.warn("The host name could not be determined, using `localhost` as fallback");
+            log.warn("The host name could not be determined, using `localhost` as fallback");
         }
-        LOG.info(
+        log.info(
             CRLFLogConverter.CRLF_SAFE_MARKER,
             """
 

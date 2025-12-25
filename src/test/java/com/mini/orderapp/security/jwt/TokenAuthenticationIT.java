@@ -42,9 +42,7 @@ class TokenAuthenticationIT {
     }
 
     private void expectOk(String token) throws Exception {
-        mvc
-            .perform(MockMvcRequestBuilders.get("/api/authenticate").header(AUTHORIZATION, BEARER + token))
-            .andExpect(status().isNoContent());
+        mvc.perform(MockMvcRequestBuilders.get("/api/authenticate").header(AUTHORIZATION, BEARER + token)).andExpect(status().isOk());
     }
 
     private void expectUnauthorized(String token) throws Exception {

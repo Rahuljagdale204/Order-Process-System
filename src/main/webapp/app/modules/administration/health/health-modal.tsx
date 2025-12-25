@@ -1,14 +1,14 @@
 import React from 'react';
-import { Button, Modal, ModalBody, ModalFooter, ModalHeader, Table } from 'reactstrap';
+import { Table, Modal, ModalHeader, ModalBody, ModalFooter, Button } from 'reactstrap';
 
 const formatDiskSpaceOutput = rawValue => {
-  // Should display storage space in a human readable unit
+  // Should display storage space in an human readable unit
   const val = rawValue / 1073741824;
   if (val > 1) {
     // Value
-    return `${val.toFixed(2)} GB`;
+    return val.toFixed(2) + ' GB';
   }
-  return `${(rawValue / 1048576).toFixed(2)} MB`;
+  return (rawValue / 1048576).toFixed(2) + ' MB';
 };
 
 const HealthModal = ({ handleClose, healthObject, showModal }) => {

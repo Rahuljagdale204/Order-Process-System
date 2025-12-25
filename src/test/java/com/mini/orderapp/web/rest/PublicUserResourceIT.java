@@ -9,6 +9,7 @@ import com.mini.orderapp.domain.User;
 import com.mini.orderapp.repository.UserRepository;
 import com.mini.orderapp.security.AuthoritiesConstants;
 import com.mini.orderapp.service.UserService;
+import jakarta.persistence.EntityManager;
 import java.util.Set;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -28,11 +29,16 @@ import org.springframework.transaction.annotation.Transactional;
 @IntegrationTest
 class PublicUserResourceIT {
 
+    private static final String DEFAULT_LOGIN = "johndoe";
+
     @Autowired
     private UserRepository userRepository;
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private EntityManager em;
 
     @Autowired
     private MockMvc restUserMockMvc;
@@ -41,17 +47,17 @@ class PublicUserResourceIT {
     private Long numberOfUsers;
 
     @BeforeEach
-    void countUsers() {
+    public void countUsers() {
         numberOfUsers = userRepository.count();
     }
 
     @BeforeEach
-    void initTest() {
-        user = UserResourceIT.initTestUser();
+    public void initTest() {
+        user = UserResourceIT.initTestUser(em);
     }
 
     @AfterEach
-    void cleanupAndCheck() {
+    public void cleanupAndCheck() {
         userService.deleteUser(user.getLogin());
         assertThat(userRepository.count()).isEqualTo(numberOfUsers);
         numberOfUsers = null;
