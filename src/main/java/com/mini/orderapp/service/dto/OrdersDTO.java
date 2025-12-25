@@ -23,7 +23,6 @@ public class OrdersDTO implements Serializable {
     @NotNull
     private Double amount;
 
-    @NotNull
     private Instant createdAt;
 
     public Long getId() {

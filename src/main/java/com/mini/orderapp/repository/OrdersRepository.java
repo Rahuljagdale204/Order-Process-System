@@ -1,6 +1,7 @@
 package com.mini.orderapp.repository;
 
 import com.mini.orderapp.domain.Orders;
+import java.util.List;
 import org.springframework.data.jpa.repository.*;
 import org.springframework.stereotype.Repository;
 
@@ -9,4 +10,6 @@ import org.springframework.stereotype.Repository;
  */
 @SuppressWarnings("unused")
 @Repository
-public interface OrdersRepository extends JpaRepository<Orders, Long> {}
+public interface OrdersRepository extends JpaRepository<Orders, Long> {
+    List<Orders> getOrdersByCustomerId(String customerId);
+}

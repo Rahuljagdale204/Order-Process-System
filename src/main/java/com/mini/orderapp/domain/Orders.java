@@ -38,6 +38,11 @@ public class Orders implements Serializable {
     @Column(name = "created_at", nullable = false)
     private Instant createdAt;
 
+    @PrePersist
+    public void prePersist() {
+        this.createdAt = Instant.now();
+    }
+
     // jhipster-needle-entity-add-field - JHipster will add fields here
 
     public Long getId() {

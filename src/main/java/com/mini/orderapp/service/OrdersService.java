@@ -2,8 +2,10 @@ package com.mini.orderapp.service;
 
 import com.mini.orderapp.domain.Orders;
 import com.mini.orderapp.repository.OrdersRepository;
+import com.mini.orderapp.service.customService.OrderFileWriter;
 import com.mini.orderapp.service.dto.OrdersDTO;
 import com.mini.orderapp.service.mapper.OrdersMapper;
+import java.util.List;
 import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,9 +27,12 @@ public class OrdersService {
 
     private final OrdersMapper ordersMapper;
 
-    public OrdersService(OrdersRepository ordersRepository, OrdersMapper ordersMapper) {
+    private final OrderFileWriter orderFileWriter;
+
+    public OrdersService(OrdersRepository ordersRepository, OrdersMapper ordersMapper, OrderFileWriter orderFileWriter) {
         this.ordersRepository = ordersRepository;
         this.ordersMapper = ordersMapper;
+        this.orderFileWriter = orderFileWriter;
     }
 
     /**
@@ -40,7 +45,9 @@ public class OrdersService {
         log.debug("Request to save Orders : {}", ordersDTO);
         Orders orders = ordersMapper.toEntity(ordersDTO);
         orders = ordersRepository.save(orders);
-        return ordersMapper.toDto(orders);
+        ordersDTO = ordersMapper.toDto(orders);
+        orderFileWriter.writeOrder(ordersDTO);
+        return ordersDTO;
     }
 
     /**
@@ -98,6 +105,12 @@ public class OrdersService {
     public Optional<OrdersDTO> findOne(Long id) {
         log.debug("Request to get Orders : {}", id);
         return ordersRepository.findById(id).map(ordersMapper::toDto);
+    }
+
+    public List<OrdersDTO> findOrdersByCustomerId(String customerId) {
+        log.debug("Request to get Orders By CustomerId: {}", customerId);
+        List<Orders> orders = ordersRepository.getOrdersByCustomerId(customerId);
+        return ordersMapper.toDto(orders);
     }
 
     /**

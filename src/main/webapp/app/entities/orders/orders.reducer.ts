@@ -15,13 +15,14 @@ const initialState: EntityState<IOrders> = {
 };
 
 const apiUrl = 'api/orders';
+const allOrderUrl = 'api/orders/all';
 
 // Actions
 
 export const getEntities = createAsyncThunk(
   'orders/fetch_entity_list',
   async ({ page, size, sort }: IQueryParams) => {
-    const requestUrl = `${apiUrl}?${sort ? `page=${page}&size=${size}&sort=${sort}&` : ''}cacheBuster=${new Date().getTime()}`;
+    const requestUrl = `${allOrderUrl}?${sort ? `page=${page}&size=${size}&sort=${sort}&` : ''}cacheBuster=${new Date().getTime()}`;
     return axios.get<IOrders[]>(requestUrl);
   },
   { serializeError: serializeAxiosError },

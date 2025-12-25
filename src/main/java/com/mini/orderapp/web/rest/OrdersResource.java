@@ -141,7 +141,7 @@ public class OrdersResource {
      * @param pageable the pagination information.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of orders in body.
      */
-    @GetMapping("")
+    @GetMapping("/all")
     public ResponseEntity<List<OrdersDTO>> getAllOrders(@org.springdoc.core.annotations.ParameterObject Pageable pageable) {
         log.debug("REST request to get a page of Orders");
         Page<OrdersDTO> page = ordersService.findAll(pageable);
@@ -160,6 +160,14 @@ public class OrdersResource {
         log.debug("REST request to get Orders : {}", id);
         Optional<OrdersDTO> ordersDTO = ordersService.findOne(id);
         return ResponseUtil.wrapOrNotFound(ordersDTO);
+    }
+
+    @GetMapping
+    public ResponseEntity<List<OrdersDTO>> getOrdersByCustomer(@RequestParam String customerId) {
+        log.debug("REST request to get Orders for customerId : {}", customerId);
+
+        List<OrdersDTO> orders = ordersService.findOrdersByCustomerId(customerId);
+        return ResponseEntity.ok(orders);
     }
 
     /**
